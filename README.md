@@ -74,5 +74,5 @@ Then open [http://localhost:5173](http://localhost:5173).
 ---
 
 ## 👨‍💻 Author
-Built with ❤️ for Alex by [Your Name].
+Built with ❤️ by Poovarasan A
 
