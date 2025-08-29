@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Alex's Book Finder</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Poovarasan's Book Finder</h1>
       <form onSubmit={searchBooks} className="flex gap-2 max-w-xl mx-auto">
         <input
           type="text"
