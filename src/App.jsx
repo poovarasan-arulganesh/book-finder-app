@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function App() {
   const [query, setQuery] = useState("");
+  const [searchType, setSearchType] = useState("q");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -12,7 +13,7 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`https://openlibrary.org/search.json?title=${query}`);
+      const res = await fetch(`https://openlibrary.org/search.json?${searchType}=${query}`);
       const data = await res.json();
       if (data.docs.length === 0) {
         setError("No books found.");
@@ -33,12 +34,22 @@ function App() {
       <div className="bg-black/60 w-full max-w-4xl p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-bold text-white text-center mb-6">📚 Book Finder</h1>
         
-        <form onSubmit={searchBooks} className="flex gap-2 mb-6">
+        <form onSubmit={searchBooks} className="flex gap-2 mb-6 flex-wrap">
+          <select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+            className="p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="q">All</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="isbn">ISBN</option>
+          </select>
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search books by title..."
+            placeholder={`Search books by ${searchType}...`}
             className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
