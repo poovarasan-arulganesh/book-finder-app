@@ -1,8 +1,12 @@
 # 📚 Book Finder App
 
-Book Finder is a React + Tailwind CSS application that lets you search books using the **Open Library API**.  
-Built for Alex (a college student persona) who wants a fast, simple, mobile-friendly way to discover books.
+A simple and responsive Book Finder application built with React + Vite and Tailwind CSS.  
+It uses the **Open Library API** to fetch book details, including covers, authors, and publish years.  
 
+## 🚀 Live Demo
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit-blue?style=for-the-badge)](https://book-finder-poo.netlify.app/)
+
+---
 ---
 
 ## ✨ Features
