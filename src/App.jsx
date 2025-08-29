@@ -1,86 +1,84 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
-export default function App() {
+function App() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function searchBooks(e) {
+  const searchBooks = async (e) => {
     e.preventDefault();
-    if (!query.trim()) return;
+    if (!query) return;
     setLoading(true);
     setError("");
-    setResults([]);
     try {
-      const res = await fetch(
-        `https://openlibrary.org/search.json?title=${encodeURIComponent(query)}`
-      );
-      if (!res.ok) throw new Error("Network response was not ok");
+      const res = await fetch(`https://openlibrary.org/search.json?title=${query}`);
       const data = await res.json();
-      if (!data.docs || data.docs.length === 0) {
-        setError("No results found.");
-      } else {
-        setResults(data.docs.slice(0, 20)); // show top 20
+      if (data.docs.length === 0) {
+        setError("No books found.");
       }
+      setBooks(data.docs.slice(0, 12));
     } catch (err) {
-      setError("Failed to fetch results. Please try again.");
+      setError("Failed to fetch books.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Poovarasan's Book Finder</h1>
-      <form onSubmit={searchBooks} className="flex gap-2 max-w-xl mx-auto">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search books by title..."
-          className="flex-1 border px-3 py-2 rounded-lg"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Search
-        </button>
-      </form>
+    <div
+      className="min-h-screen bg-cover bg-center flex flex-col items-center p-6"
+      style={{ backgroundImage: "url('/background.jpg')" }}
+    >
+      <div className="bg-black/60 w-full max-w-4xl p-6 rounded-2xl shadow-lg">
+        <h1 className="text-3xl font-bold text-white text-center mb-6">📚 Book Finder</h1>
+        
+        <form onSubmit={searchBooks} className="flex gap-2 mb-6">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search books by title..."
+            className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Search
+          </button>
+        </form>
 
-      <div className="max-w-3xl mx-auto mt-6">
-        {loading && <p className="text-center">Loading...</p>}
-        {error && <p className="text-center text-red-600">{error}</p>}
+        {loading && <p className="text-white text-center">Loading...</p>}
+        {error && <p className="text-red-400 text-center">{error}</p>}
 
-        <ul className="grid gap-4 mt-4">
-          {results.map((book) => (
-            <li
-              key={book.key}
-              className="bg-white p-4 rounded-lg shadow flex gap-4"
-            >
-              <img
-                src={
-                  book.cover_i
-                    ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
-                    : "https://placehold.co/100x150?text=No+Cover"
-                }
-                alt={book.title}
-                className="w-24 h-36 object-cover rounded"
-              />
-              <div>
-                <h2 className="font-semibold text-lg">{book.title}</h2>
-                <p className="text-sm text-slate-600">
-                  {book.author_name ? book.author_name.join(", ") : "Unknown"}
-                </p>
-                <p className="text-sm text-slate-500">
-                  {book.first_publish_year || ""}
-                </p>
-              </div>
-            </li>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {books.map((book, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow">
+              {book.cover_i ? (
+                <img
+                  src={`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`}
+                  alt={book.title}
+                  className="w-full h-48 object-cover rounded-lg mb-2"
+                />
+              ) : (
+                <div className="w-full h-48 bg-gray-300 rounded-lg flex items-center justify-center text-gray-600">
+                  No Cover
+                </div>
+              )}
+              <h2 className="font-semibold text-lg">{book.title}</h2>
+              <p className="text-sm text-gray-700">
+                {book.author_name ? book.author_name.join(", ") : "Unknown Author"}
+              </p>
+              <p className="text-sm text-gray-500">
+                {book.first_publish_year || "N/A"}
+              </p>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
 }
+
+export default App;
